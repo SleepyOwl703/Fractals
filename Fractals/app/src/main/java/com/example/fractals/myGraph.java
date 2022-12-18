@@ -34,14 +34,7 @@ public class myGraph  {
         //myPoint point = new myPoint(5,4,);
         Canvas canvas = new Canvas();
         Color col = new Color();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Log.d("DECOLOR", String.valueOf(col.toArgb()));
-        }
 
-        Paint my_paint = new Paint();
-        drawPaint(my_paint);
-        //                g.setColor(point.c);
-//                g.drawOval(point.x, point.y, 1, 1);
 
   for( int h=0; h<test.sizeGraphX; h++)
             for( int w=0; w<test.sizeGraphY; w++) {
@@ -94,16 +87,7 @@ public class myGraph  {
                     points.add(new myPoint(h, w, new Color(0,255,Math.round(255/(test.maxStep/k)))));
                 else
                     points.add(new myPoint(h, w, new Color(0,0,0)));
-
-
-
-//                g.setColor(point.c);
-//                g.drawOval(point.x, point.y, 1, 1);
            //}
-    }
-    public void drawPaint (Paint paint) {
-        Canvas canvas = new Canvas();
-        canvas.drawOval(2f,5f,5f,10f,paint);
     }
 }
 */

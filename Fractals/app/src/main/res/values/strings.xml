@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">Fractals</string>
+    <string name="app_name">Fractal</string>
+    <string name="a_min">enter a min</string>
+    <string name="a_max">enter a max</string>
+    <string name="b_min">enter b min</string>
+    <string name="b_max">enter b max</string>
 </resources>
