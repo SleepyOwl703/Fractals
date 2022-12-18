@@ -4,4 +4,6 @@
     <string name="a_max">enter a max</string>
     <string name="b_min">enter b min</string>
     <string name="b_max">enter b max</string>
+    <string name="build">Построить</string>
+    <string name="clean">Очистить</string>
 </resources>

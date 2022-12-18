@@ -32,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
             floatEndX = -1, floatEndY = -1;
 
     //CONST
-    public static int sizeGraphX = 640, sizeGraphY = 480;
-    public static int maxStep = 1000;
+    public static int sizeGraphX = 10, sizeGraphY = 10;
+    public static int maxStep = 70;
     public static float maxNorm = 1.0e6f;
 
     private Bitmap bitmap;
@@ -58,18 +58,18 @@ public class MainActivity extends AppCompatActivity {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             Color translucentRed = Color.valueOf(1.0f, 0.0f, 0.0f, 0.5f);
             Paint my_paint = new Paint();
-            //drawPaint(my_paint);
         }
-
     }
-
     public class myPoint {
-        int x; int y; Color c;
-        public myPoint(int x_, int y_, Color c_) {
-            x=x_; y=y_;	c=c_;
+        int x; int y;
+        float r,g,b ;
+        public myPoint(int x_, int y_, float r_, float g_, float b_ ) {
+            x=x_; y=y_;
+            r = r_;
+            g = g_;
+            b = b_;
         }
     }
-
     public void onPaintClick(View view) {
          float a_Min = Float.parseFloat(String.valueOf(aMin.getText()));
          float a_Max = Float.parseFloat(String.valueOf(aMax.getText()));
@@ -79,8 +79,12 @@ public class MainActivity extends AppCompatActivity {
             drawPaintSketchImage(a_Min , a_Max ,b_Min ,b_Max );
         }
     }
-
     public void onClean(View view) {
+        aMin.setText("");
+        aMax.setText("");
+        bMin.setText("");
+        bMax.setText("");
+
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void drawPaintSketchImage(float amax_, float amin_, float bmax_, float bmin_) {
@@ -90,10 +94,12 @@ public class MainActivity extends AppCompatActivity {
                     imageView.getHeight(),
                     Bitmap.Config.ARGB_8888);
             canvas = new Canvas(bitmap);
-            paint.setColor(Color.RED);
+            Color new_c = Color.valueOf(58, 199, 95);
+            paint.setColor(new_c.toArgb());
             paint.setAntiAlias(true);
             paint.setStyle(Paint.Style.STROKE);
             paint.setStrokeWidth(8);
+            imageView.setImageBitmap(bitmap);
         }
         // ЛОГИКА ПОСТРОЕНИЯ ФРАКТАЛА
         ArrayList<myPoint> points = new ArrayList<>();
@@ -101,72 +107,59 @@ public class MainActivity extends AppCompatActivity {
         float db = (bmax_ - bmin_) / (sizeGraphY - 1);
         myComplex z = new myComplex();
         myComplex c = new myComplex();
-        Canvas canvas = new Canvas();
-        Color col = new Color();
-        int k = 0;double norm;
-        for (int h = 0; h < sizeGraphX; h++)
-            for (int w = 0; w < sizeGraphY; w++) {
-                z.set(0.0f, 0.0f);
-                c.set(amin_ + da * h, bmin_ + db * w);
-                float re1, im1;
+        double norm;
+        for( int h=0; h<sizeGraphX; h++)
+            for( int w=0; w<sizeGraphY; w++) {
+                c.set(amin_+da*h, bmin_+db*w);
+                int k = 0;z.set(0.0f,  0.0f);
+                //float re1, im1;
                 do {
-                    re1 = z.re() * z.re() - z.im() * z.im() + c.re();
-                    im1 = 2.0f * z.re() * z.im() + c.im();
-                    norm = Math.sqrt(re1 * re1 + im1 * im1);
-                    z.set(re1, im1);
                     z.sqr(z, c);
                     norm = z.norm();
                     k++;
-                    Log.d("DECOLOR", "K = " + k + "NORM = " + norm);
-                } while (k < maxStep && norm < maxNorm);
-                int alpha = 1;
-                Color cooo = Color.valueOf(2f,3f,5f);
-                Log.d("DECOLOR"," " + Math.round(255 - 10 * k)+ " " + Math.round(255 - 10 * k)+ " " + Math.round(255 - 10 * k));
-                Color new_c = Color.valueOf(Color.BLUE);
+                }  while (k < maxStep && norm < maxNorm);
                 if (k < 25) {
-                    //points.add(new myPoint(h, w, new Color(Math.round(255 - 10 * k), Math.round(255 - 10 * k), Math.round(255 - 10 * k))));
-                    points.add(new myPoint(h, w, new_c));
+                    points.add(new myPoint(h, w, Math.round(255 - 10 * k), Math.round(255 - 10 * k), Math.round(255 - 10 * k)));
                 }
-//                else if (k < 26)
-//                    points.add(new myPoint(h, w, new Color(255, 255, 255)));
-//                else if (k < 27)
-//                    points.add(new myPoint(h, w, new Color(5, 5, 5)));
-//                else if (k < 28)
-//                    points.add(new myPoint(h, w, new Color(190, 5, 5)));
-//                else if (k < 29)
-//                    points.add(new myPoint(h, w, new Color(255, 255, 0)));
-//                else if (k < 30)
-//                    points.add(new myPoint(h, w, new Color(0, 0, 0)));
-//                else if (k < 32)
-//                    points.add(new myPoint(h, w, new Color(0, 100, 100)));
-//                else if (k < 34)
-//                    points.add(new myPoint(h, w, new Color(0, 0, 0)));
-//                else if (k < 36)
-//                    points.add(new myPoint(h, w, new Color(255, 0, 0)));
-//                else if (k < 38)
-//                    points.add(new myPoint(h, w, new Color(50, 0, 0)));
-//                else if (k < 39)
-//                    points.add(new myPoint(h, w, new Color(0, 0, 50)));
-//                else if (k < 120)
-//                    points.add(new myPoint(h, w, new Color(0, 0, 0)));
-//                else if (k < 140)
-//                    points.add(new myPoint(h, w, new Color(255, 0, 0)));
-//                else if (k < 150)
-//                    points.add(new myPoint(h, w, new Color(255, 255, k)));
-//                else if (k < maxStep)
-//                    points.add(new myPoint(h, w, new Color(0, 255, Math.round(255 / (maxStep / k)))));
+                else if (k < 26)
+                    points.add(new myPoint(h, w, 255, 255, 255));
+                else if (k < 27)
+                    points.add(new myPoint(h, w, 5, 5, 5));
+                else if (k < 28)
+                    points.add(new myPoint(h, w, 190, 5, 5));
+                else if (k < 29)
+                    points.add(new myPoint(h, w, 255, 255, 0));
+                else if (k < 30)
+                    points.add(new myPoint(h, w, 0, 0, 0));
+                else if (k < 32)
+                    points.add(new myPoint(h, w, 0, 100, 100));
+                else if (k < 34)
+                    points.add(new myPoint(h, w, 0, 0, 0));
+                else if (k < 36)
+                    points.add(new myPoint(h, w,255, 0, 0));
+                else if (k < 38)
+                    points.add(new myPoint(h, w, 50, 0, 0));
+                else if (k < 39)
+                    points.add(new myPoint(h, w, 0, 0, 50));
+                else if (k < 120)
+                    points.add(new myPoint(h, w, 0, 0, 0));
+                else if (k < 140)
+                    points.add(new myPoint(h, w, 255, 0, 0));
+                else if (k < 150)
+                    points.add(new myPoint(h, w,255, 255, k));
+                else if (k < maxStep)
+                    points.add(new myPoint(h, w, 0, 255, Math.round(255 / (maxStep / k))));
                 else {
-                    Color new_c1 = Color.valueOf(Color.RED);
-                    points.add(new myPoint(h, w, new_c1));
+                    points.add(new myPoint(h, w, 0, 0, 0));
                 }
-                //ОТРИСОВКА
-                for(myPoint point : points) {
-                   // paint.setColor(point.c);
-                    canvas.drawOval(point.x, point.y, 1, 1,paint);
-                }
-                //canvas.drawOval(200f, 500f, 230f, 300f, paint);
-                imageView.setImageBitmap(bitmap);
             }
+        //ОТРИСОВКА
+        for(myPoint point : points) {
+            Color new_c = Color.valueOf(point.r, point.g, point.b);
+            paint.setColor(new_c.toArgb());
+            Log.d("DECOLOR", " " + point.r + " " + point.g+ " " + point.b);
+            canvas.drawPoint(point.x, point.y, paint);
+        }
+        imageView.setImageBitmap(bitmap);
     }
-
 }

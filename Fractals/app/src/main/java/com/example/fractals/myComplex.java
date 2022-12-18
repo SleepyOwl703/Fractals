@@ -1,5 +1,7 @@
 package com.example.fractals;
 
+import android.util.Log;
+
 public class myComplex {
     private float im;
     private float re;
@@ -24,6 +26,7 @@ public class myComplex {
     }
 
     public float norm() {
+        Log.d("myComplex", ""+ re*re+ im*im);
         return re*re +im*im;
     }
     public float re() { return this.re; }
